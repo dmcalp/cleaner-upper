@@ -1,2 +1,2 @@
 # cleaner_upper
-Python script to categorise images based on their EXIF data.
+Python script to quickly categorise images into folders based on the date and location of their EXIF data.
