@@ -2,10 +2,16 @@ import os
 import shutil
 import reverse_geocoder as rg
 import pycountry
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
 from exif import Image
 
-images = os.listdir('C:\\Code\\CleanerUpper\\images')
-images = [im for im in images if im.endswith('jpg')]
+Tk().withdraw()
+filename = askdirectory(title="Select the folder of images that you'd like to organise")
+desired_location = askdirectory(title="Select the folder in which you would like to store the images")
+
+images_dir = os.listdir(filename)
+images = [im for im in images_dir if im.endswith('jpg')]
 
 def dms_coords_to_dd_coords(coords, coords_ref):
     decimal_degrees = coords[0] + \
@@ -18,12 +24,12 @@ def dms_coords_to_dd_coords(coords, coords_ref):
     return decimal_degrees
 
 def create_dir(dir_name):
-  if not os.path.isdir(f'{dir_name}'):
+  if not os.path.isdir(dir_name):
     os.mkdir(dir_name)
     print(f'Creating {dir_name} folder')
 
 for i in range(len(images)):
-  with open(os.path.abspath('images//'+images[i]), "rb") as img_file:
+  with open(os.path.join(filename, images[i]), "rb") as img_file:
     img = Image(img_file)
 
     if img.has_exif:
@@ -47,11 +53,11 @@ for i in range(len(images)):
         print(f'Image {i+1} has no location information, skipping image.')
         continue
       
-      year_path = os.getcwd() + '\\' + str(year)
-      create_dir(year)
-      country_path = year_path + '\\' + country
+      year_path = os.path.join(desired_location, str(year))
+      create_dir(year_path)
+      country_path = os.path.join(year_path, country)
       create_dir(country_path)
-      city_path = country_path + '\\' + city
+      city_path = os.path.join(country_path, city)
       create_dir(city_path)
     
     else:
@@ -59,7 +65,7 @@ for i in range(len(images)):
       print(f'Image {i+1} does not contain any EXIF information.')
       continue
 
-  shutil.move(f'C:\\Code\\CleanerUpper\\images\\{images[i]}', city_path + f'\\{images[i]}')
+  shutil.move(os.path.join(filename, images[i]), os.path.join(city_path, images[i]))
 
 
 
