@@ -7,10 +7,10 @@ from tkinter.filedialog import askdirectory
 from exif import Image
 
 Tk().withdraw()
-filename = askdirectory(title="Select the folder of images that you'd like to organise")
-desired_location = askdirectory(title="Select the folder in which you would like to store the images")
+image_dir_path = askdirectory(title="Select the folder containing the images you'd like to organise")
+desired_location = askdirectory(title="Select the destination in which you would like to store the images")
 
-images_dir = os.listdir(filename)
+images_dir = os.listdir(image_dir_path)
 images = [im for im in images_dir if im.endswith('jpg')]
 
 def dms_coords_to_dd_coords(coords, coords_ref):
@@ -29,7 +29,7 @@ def create_dir(dir_name):
     print(f'Creating {dir_name} folder')
 
 for i in range(len(images)):
-  with open(os.path.join(filename, images[i]), "rb") as img_file:
+  with open(os.path.join(image_dir_path, images[i]), "rb") as img_file:
     img = Image(img_file)
 
     if img.has_exif:
@@ -65,7 +65,7 @@ for i in range(len(images)):
       print(f'Image {i+1} does not contain any EXIF information.')
       continue
 
-  shutil.move(os.path.join(filename, images[i]), os.path.join(city_path, images[i]))
+  shutil.move(os.path.join(image_dir_path, images[i]), os.path.join(city_path, images[i]))
 
 
 
