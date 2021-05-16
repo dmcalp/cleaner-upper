@@ -2,6 +2,7 @@ import os
 import shutil
 import reverse_geocoder as rg
 import pycountry
+import sys
 from tkinter import Tk
 from tkinter.filedialog import askdirectory
 from exif import Image
@@ -9,6 +10,9 @@ from exif import Image
 Tk().withdraw()
 image_dir_path = askdirectory(title="Select the folder containing the images you'd like to organise")
 desired_location = askdirectory(title="Select the destination in which you would like to store the images")
+
+if image_dir_path == '' or desired_location == '':
+  sys.exit("Source or destination directory not selected, please run cleanerupper.py again.")
 
 images_dir = os.listdir(image_dir_path)
 images = [im for im in images_dir if im.endswith('jpg')]
